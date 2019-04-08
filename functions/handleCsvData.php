@@ -5,6 +5,7 @@ function handleCsvData($uploadedFile){
   if($fhandle = fopen($uploadedFile, 'r')){
     $data = extractCsvData($fhandle, $uploadedFile);
     displayReport($data);
+    writeToCsv($data);
     echo "\n</table>";
     echo
     "<p>Download this report as a CSV -
@@ -50,14 +51,16 @@ function displayReport($data){
     echo "<td>" . htmlspecialchars($key) . "</td>";
     echo "<td>" . htmlspecialchars($val) . "</td>";
     echo "</tr>\n";
-    writeToCsv($key, $val);
+
   }
 }
 
-function writeToCsv($key, $val){
+function writeToCsv($data){
   $csvfile = 'csv/Report.csv';
   if($csvhandle = fopen($csvfile, 'w')){
-    fwrite($csvhandle, $key . ',' . $val . "\n");
+    foreach ($data as $key => $val) {
+      fwrite($csvhandle, $key . ',' . $val . "\n");
+    }
     fclose($csvhandle);
   }
 }
